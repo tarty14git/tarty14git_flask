@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_TYPE=postgresql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=cth_report_db
+      - DB_USER=cth_user
+      - DB_PASSWORD=cth_password
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: cth_postgres
+    environment:
+      POSTGRES_DB: cth_report_db
+      POSTGRES_USER: cth_user
+      POSTGRES_PASSWORD: cth_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/schema_postgres.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_data:

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cth-enterprise-app
+  labels:
+    app: cth-enterprise-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cth-enterprise-app
+  template:
+    metadata:
+      labels:
+        app: cth-enterprise-app
+    spec:
+      containers:
+      - name: cth-app
+        image: cth-enterprise-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_TYPE
+          value: "postgresql"
+        - name: DB_HOST
+          value: "cth-postgres-service"
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
